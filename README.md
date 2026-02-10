@@ -1,14 +1,10 @@
-# DoLess-Agents
-A  chrome extension and application that will perform computer use and will be able to produce and use generated functions and workflows which automate processes partially allowing for lower costs and time delays.
-
-
-# Beginner Setup Guide
+# Task Automator Pro - Beginner Setup Guide
 
 This is a beginner-friendly quick start for the main GitHub page.
 
 ## What This Project Is
 
-This is a Chrome extension that lets you:
+Task Automator Pro is a Chrome extension that lets you:
 
 - record browser actions
 - replay them later
@@ -71,7 +67,7 @@ ollama pull gemma3:4b
 4. Optional but recommended for local embeddings:
 
 ```bash
-ollama pull embeddinggemma
+ollama pull gemma-embeddings
 ```
 
 ### Connect Ollama in the extension
@@ -140,3 +136,36 @@ If this works, your setup is complete.
 - Ollama model dropdown says "No models found": run `ollama pull <model>`.
 - Ollama still OFF: verify `ollama serve` is active and URL is correct.
 - Backend OFF: check Docker container is running on port `8787`.
+
+## Built-in Tools and Reliability (Current)
+
+As of this code snapshot, the extension has 12 integrated tools.
+
+Reliability scale:
+- High = usually reliable if inputs are valid
+- Medium-High = reliable, but depends on API/network/runtime context
+- Medium = powerful but more sensitive to page state/AI variability
+
+| Tool | Reliability | Notes |
+|---|---|---|
+| `shared_notepad` | High | Session memory for passing data between tool steps. |
+| `persistent_state_manager` | High | Long-term key/value storage via `chrome.storage.local`. |
+| `file_system_maker` | High | Exports `.csv`, `.json`, `.md`, `.html`, `.txt` using downloads API. |
+| `current_tab_content` | High | Fast page snapshot; blocked on internal browser pages. |
+| `site_modifier` | High | Hides/highlights/injects CSS/JS on current page. |
+| `webpage_generator` | High | Generates HTML report/dashboard pages from JSON data. |
+| `embedding_handler` | Medium-High | Semantic search/ranking; can fallback from Ollama to Gemini. |
+| `remote_intelligence_api` | Medium-High | Gemini reasoning/analysis with retries and JSON parsing logic. |
+| `task_scheduler` | Medium-High | Interval/time/keyword/DOM-change automation scheduling. |
+| `local_ollama_model` | Medium | Great when local Ollama is healthy; availability depends on local runtime. |
+| `universal_flexible_scraper` | Medium | Strong scraper, but results vary by site structure and page dynamics. |
+| `computer_use_api` | Medium | Most capable visual automation tool; most sensitive to tab visibility and action limits. |
+
+### Key Dependency Notes
+
+- `local_ollama_model` is the only tool with explicit availability gating (it checks Ollama health).
+- Most other tools are always listed as available but can still fail at runtime due to:
+  - missing Gemini API key
+  - internal/restricted page URLs
+  - screenshot capture limits (tab must be visible for some flows)
+  - dynamic site behavior
